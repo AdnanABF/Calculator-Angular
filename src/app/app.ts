@@ -35,27 +35,38 @@ export class App {
     // 1. Browser-only check to load initial theme
     afterNextRender(() => {
       const savedTheme = localStorage.getItem('theme') === 'true';
-      this.isDarkMode.set(savedTheme);
+      if (savedTheme) {
+        this.isDarkMode.set(true);
+        document.documentElement.classList.add('dark');
+      } else {
+        this.isDarkMode.set(false);
+        document.documentElement.classList.remove('dark');
+      }
     });
 
     // 2. Effect remains safe because it only runs when signals change
     // but we add a guard for 'document' just in case.
     effect(() => {
+      const dark = this.isDarkMode();
       if (typeof document !== 'undefined') {
-        const root = document.documentElement;
-        if (this.isDarkMode()) {
-          root.classList.add('dark');
-          localStorage.setItem('theme', 'true');
+        if (dark) {
+          document.documentElement.classList.add('dark');
         } else {
-          root.classList.remove('dark');
-          localStorage.setItem('theme', 'false');
+          document.documentElement.classList.remove('dark');
         }
       }
     });
   }
 
+  // Theme Toggle: This is the ONLY place where we save to localStorage.
   toggleTheme(): void {
-    this.isDarkMode.update((x) => !x);
+    this.isDarkMode.update((dark) => {
+      const newState = !dark;
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('theme', newState ? 'true' : 'false');
+      }
+      return newState;
+    });
   }
 
   // HostListener to capture keyboard events for better user experience

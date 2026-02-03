@@ -15,9 +15,15 @@
     <div class="grid grid-cols-4 gap-3">
       <button
         (click)="clear()"
-        class="col-span-3 h-14 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xl transition-colors"
+        class="col-span-2 h-14 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xl transition-colors"
       >
         C
+      </button>
+      <button
+        (click)="backspace()"
+        class="h-14 bg-gray-400 hover:bg-gray-300 text-white text-xl rounded-lg transition-colors"
+      >
+        ~~
       </button>
       <button
         (click)="setOperator('/')"
@@ -25,7 +31,6 @@
       >
         ÷
       </button>
-
       <button
         (click)="appendNumber('7')"
         class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
@@ -125,6 +130,5 @@
         >Adnan Bin Farook</a
       >
     </h5>
-    <h5 class="text-gray-600">Test again</h5>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +13,22 @@ export class App {
   firstOperand = signal<number | null>(null);
   operator = signal<string | null>(null);
   waitingForSecondOperand = signal<boolean>(false);
+
+  // HostListener to capture keyboard events for better user experience
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.key >= '0' && event.key <= '9') {
+      this.appendNumber(event.key);
+    } else if (['+', '-', '*', '/'].includes(event.key)) {
+      this.setOperator(event.key);
+    } else if (event.key === 'Enter' || event.key === '=') {
+      this.calculate();
+    } else if (event.key === 'Escape' || event.key === 'c' || event.key === 'Delete') {
+      this.clear();
+    } else if (event.key === 'Backspace') {
+      this.backspace();
+    }
+  }
 
   // Method to handle number button clicks
   appendNumber(num: string): void {
@@ -53,5 +69,15 @@ export class App {
     this.firstOperand.set(null);
     this.operator.set(null);
     this.waitingForSecondOperand.set(false);
+  }
+
+  // Remove the last digit from the display
+  backspace(): void {
+    const current = this.displayValue();
+    if (current.length > 1) {
+      this.displayValue.set(current.slice(0, -1));
+    } else {
+      this.displayValue.set('0');
+    }
   }
 }

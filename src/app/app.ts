@@ -1,6 +1,6 @@
 import { Component, signal, HostListener } from '@angular/core';
+import { trigger, transition, style, animate } from '@angular/animations';
 import { LucideAngularModule, Delete, History } from 'lucide-angular';
-import { resourceUsage } from 'process';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +8,14 @@ import { resourceUsage } from 'process';
   imports: [LucideAngularModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
+  animations: [
+    trigger('historyAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(20px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0px)' })),
+      ]),
+    ]),
+  ],
 })
 export class App {
   readonly DeleteIcon = Delete;

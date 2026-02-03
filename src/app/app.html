@@ -121,14 +121,19 @@
     </div>
     @if (history().length > 0) {
       <div class="mt-6 border-t border-gray-700 pt-4">
-        <h3 class="flex gap-2 items-center text-gray-400 text-sm mb-2 uppercase tracking-widest font-semibold">
+        <h3
+          class="flex gap-2 items-center text-gray-400 text-sm mb-2 uppercase tracking-widest font-semibold"
+        >
           <lucide-icon [img]="HistoryIcon" size="18"></lucide-icon>
 
           History
         </h3>
         <div class="max-h-32 overflow-y-auto space-y-1">
           @for (item of history(); track item) {
-            <div class="text-gray-300 text-right font-mono text-sm bg-gray-900/50 p-1 rounded">
+            <div
+              @historyAnimation
+              class="text-gray-300 text-right font-mono text-sm bg-gray-900/50 p-1 rounded"
+            >
               {{ item }}
             </div>
           }

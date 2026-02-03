@@ -1,6 +1,6 @@
-import { Component, signal, HostListener } from '@angular/core';
+import { Component, signal, HostListener, effect, afterNextRender } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { LucideAngularModule, Delete, History } from 'lucide-angular';
+import { LucideAngularModule, Delete, History, Sun, Moon } from 'lucide-angular';
 
 @Component({
   selector: 'app-root',
@@ -20,13 +20,43 @@ import { LucideAngularModule, Delete, History } from 'lucide-angular';
 export class App {
   readonly DeleteIcon = Delete;
   readonly HistoryIcon = History;
+  readonly SunIcon = Sun;
+  readonly MoonIcon = Moon;
 
-  // We use signals to hold the state of our calculator
+  // State Management with Signals
+  isDarkMode = signal<boolean>(false);
   displayValue = signal<string>('0');
   firstOperand = signal<number | null>(null);
   operator = signal<string | null>(null);
   waitingForSecondOperand = signal<boolean>(false);
   history = signal<string[]>([]);
+
+  constructor() {
+    // 1. Browser-only check to load initial theme
+    afterNextRender(() => {
+      const savedTheme = localStorage.getItem('theme') === 'true';
+      this.isDarkMode.set(savedTheme);
+    });
+
+    // 2. Effect remains safe because it only runs when signals change
+    // but we add a guard for 'document' just in case.
+    effect(() => {
+      if (typeof document !== 'undefined') {
+        const root = document.documentElement;
+        if (this.isDarkMode()) {
+          root.classList.add('dark');
+          localStorage.setItem('theme', 'true');
+        } else {
+          root.classList.remove('dark');
+          localStorage.setItem('theme', 'false');
+        }
+      }
+    });
+  }
+
+  toggleTheme(): void {
+    this.isDarkMode.update((x) => !x);
+  }
 
   // HostListener to capture keyboard events for better user experience
   @HostListener('window:keydown', ['$event'])
@@ -66,17 +96,17 @@ export class App {
   // Method to calculate the final result
   calculate(): void {
     const op = this.operator();
-    if (!op || this.firstOperand() === null) return; // Guard: Don't calculate if no operator exists
-
     const firstValue = this.firstOperand();
+    if (!op || firstValue === null) return;
+
     const secondOperand = Number(this.displayValue());
     let result: string = '';
 
-    if (op === '+') result = (firstValue! + secondOperand).toString();
-    if (op === '-') result = (firstValue! - secondOperand).toString();
-    if (op === '*') result = (firstValue! * secondOperand).toString();
+    if (op === '+') result = (firstValue + secondOperand).toString();
+    if (op === '-') result = (firstValue - secondOperand).toString();
+    if (op === '*') result = (firstValue * secondOperand).toString();
     if (op === '/') {
-      result = secondOperand === 0 ? 'Error' : (firstValue! / secondOperand).toString();
+      result = secondOperand === 0 ? 'Error' : (firstValue / secondOperand).toString();
     }
 
     this.displayValue.set(result);
@@ -97,9 +127,12 @@ export class App {
     this.waitingForSecondOperand.set(false);
   }
 
-  // Remove the last digit from the display
   backspace(): void {
     const current = this.displayValue();
+    if (current === 'Error') {
+      this.clear();
+      return;
+    }
     if (current.length > 1) {
       this.displayValue.set(current.slice(0, -1));
     } else {

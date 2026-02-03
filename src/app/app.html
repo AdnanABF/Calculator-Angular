@@ -1,13 +1,23 @@
-<div class="flex flex-col items-center justify-center h-screen bg-gray-100 font-sans">
+<div
+  class="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-900 font-sans transition-colors duration-500"
+>
+  <button
+    (click)="toggleTheme()"
+    class="absolute top-5 right-5 p-3 rounded-full bg-white dark:bg-gray-800 text-gray-800 dark:text-yellow-400 shadow-lg hover:scale-110 transition-all"
+  >
+    <lucide-icon [img]="isDarkMode() ? SunIcon : MoonIcon"></lucide-icon>
+  </button>
+
   <div class="mb-8 text-center w-80">
-    <h1 class="text-4xl font-bold mb-3 text-center text-gray-800">Calculator</h1>
-    <span class="text-md text-gray-500">
+    <h1 class="text-4xl font-bold mb-3 text-center text-gray-800 dark:text-gray-100">Calculator</h1>
+    <span class="text-md text-gray-500 dark:text-gray-400">
       This is a simple calculator built with Angular and Tailwind CSS.
     </span>
   </div>
-  <div class="bg-gray-800 p-5 rounded-xl shadow-2xl w-80">
+
+  <div class="bg-gray-800 dark:bg-black/60 p-5 rounded-3xl shadow-2xl w-80 border border-gray-700">
     <div
-      class="bg-gray-900 text-white text-4xl text-right p-5 mb-5 rounded-lg overflow-hidden truncate h-20 items-center justify-end"
+      class="bg-gray-900 text-white text-4xl text-right p-5 mb-5 rounded-2xl overflow-hidden truncate h-24 flex items-center justify-end font-mono border border-gray-800"
     >
       {{ displayValue() }}
     </div>
@@ -15,124 +25,125 @@
     <div class="grid grid-cols-4 gap-3">
       <button
         (click)="clear()"
-        class="col-span-2 h-14 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xl transition-colors"
+        class="col-span-2 h-14 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xl font-bold transition-all active:scale-95"
       >
         C
       </button>
       <button
         (click)="backspace()"
-        class="flex items-center justify-center h-14 bg-gray-400 hover:bg-gray-300 text-white text-xl rounded-lg transition-colors"
+        class="flex items-center justify-center h-14 bg-gray-600 hover:bg-gray-500 text-white rounded-xl transition-all active:scale-95"
       >
         <lucide-icon [img]="DeleteIcon"></lucide-icon>
       </button>
       <button
         (click)="setOperator('/')"
-        class="h-14 bg-orange-500 hover:bg-orange-600 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-orange-500 hover:bg-orange-600 text-white text-2xl rounded-xl transition-all active:scale-95"
       >
         ÷
       </button>
+
       <button
         (click)="appendNumber('7')"
-        class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         7
       </button>
       <button
         (click)="appendNumber('8')"
-        class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         8
       </button>
       <button
         (click)="appendNumber('9')"
-        class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         9
       </button>
       <button
         (click)="setOperator('*')"
-        class="h-14 bg-orange-500 hover:bg-orange-600 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-orange-500 hover:bg-orange-600 text-white text-2xl rounded-xl transition-all"
       >
         ×
       </button>
 
       <button
         (click)="appendNumber('4')"
-        class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         4
       </button>
       <button
         (click)="appendNumber('5')"
-        class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         5
       </button>
       <button
         (click)="appendNumber('6')"
-        class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         6
       </button>
       <button
         (click)="setOperator('-')"
-        class="h-14 bg-orange-500 hover:bg-orange-600 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-orange-500 hover:bg-orange-600 text-white text-2xl rounded-xl transition-all"
       >
         -
       </button>
 
       <button
         (click)="appendNumber('1')"
-        class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         1
       </button>
       <button
         (click)="appendNumber('2')"
-        class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         2
       </button>
       <button
         (click)="appendNumber('3')"
-        class="h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         3
       </button>
       <button
         (click)="setOperator('+')"
-        class="h-14 bg-orange-500 hover:bg-orange-600 text-white text-xl rounded-lg transition-colors"
+        class="h-14 bg-orange-500 hover:bg-orange-600 text-white text-2xl rounded-xl transition-all"
       >
         +
       </button>
 
       <button
         (click)="appendNumber('0')"
-        class="col-span-2 h-14 bg-gray-600 hover:bg-gray-500 text-white text-xl rounded-lg transition-colors"
+        class="col-span-2 h-14 bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 text-white text-xl rounded-xl transition-all"
       >
         0
       </button>
       <button
         (click)="calculate()"
-        class="col-span-2 h-14 bg-orange-500 hover:bg-orange-600 text-white text-xl rounded-lg transition-colors"
+        class="col-span-2 h-14 bg-orange-500 hover:bg-orange-600 text-white text-2xl rounded-xl font-bold transition-all active:scale-95"
       >
         =
       </button>
     </div>
+
     @if (history().length > 0) {
       <div class="mt-6 border-t border-gray-700 pt-4">
         <h3
-          class="flex gap-2 items-center text-gray-400 text-sm mb-2 uppercase tracking-widest font-semibold"
+          class="flex gap-2 items-center text-gray-400 text-xs mb-3 uppercase tracking-[0.2em] font-bold"
         >
-          <lucide-icon [img]="HistoryIcon" size="18"></lucide-icon>
-
+          <lucide-icon [img]="HistoryIcon" size="14"></lucide-icon>
           History
         </h3>
-        <div class="max-h-32 overflow-y-auto space-y-1">
+        <div class="max-h-32 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
           @for (item of history(); track item) {
             <div
               @historyAnimation
-              class="text-gray-300 text-right font-mono text-sm bg-gray-900/50 p-1 rounded"
+              class="text-gray-300 text-right font-mono text-xs bg-gray-900/50 p-2 rounded-lg border border-gray-800"
             >
               {{ item }}
             </div>
@@ -141,13 +152,14 @@
       </div>
     }
   </div>
-  <div class="fixed bottom-0 w-full p-5 text-center">
-    <h5 class="text-gray-600">
+
+  <div class="fixed bottom-0 w-full p-6 text-center">
+    <h5 class="text-gray-500 text-sm">
       Designed and Developed by
       <a
         href="https://adnan-portfolio-coral.vercel.app/"
         target="_blank"
-        class="text-gray-900 hover:underline hover:text-gray-700"
+        class="text-gray-800 dark:text-gray-200 font-semibold hover:underline"
         >Adnan Bin Farook</a
       >
     </h5>

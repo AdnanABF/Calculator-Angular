@@ -21,9 +21,9 @@
       </button>
       <button
         (click)="backspace()"
-        class="h-14 bg-gray-400 hover:bg-gray-300 text-white text-xl rounded-lg transition-colors"
+        class="flex items-center justify-center h-14 bg-gray-400 hover:bg-gray-300 text-white text-xl rounded-lg transition-colors"
       >
-        ~~
+        <lucide-icon [img]="DeleteIcon"></lucide-icon>
       </button>
       <button
         (click)="setOperator('/')"

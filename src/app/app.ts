@@ -1,13 +1,16 @@
 import { Component, signal, HostListener } from '@angular/core';
+import { LucideAngularModule, Delete } from 'lucide-angular';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [],
+  imports: [LucideAngularModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
+  readonly DeleteIcon = Delete;
+
   // We use signals to hold the state of our calculator
   displayValue = signal<string>('0');
   firstOperand = signal<number | null>(null);

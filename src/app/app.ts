@@ -1,5 +1,6 @@
 import { Component, signal, HostListener } from '@angular/core';
-import { LucideAngularModule, Delete } from 'lucide-angular';
+import { LucideAngularModule, Delete, History } from 'lucide-angular';
+import { resourceUsage } from 'process';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +11,14 @@ import { LucideAngularModule, Delete } from 'lucide-angular';
 })
 export class App {
   readonly DeleteIcon = Delete;
+  readonly HistoryIcon = History;
 
   // We use signals to hold the state of our calculator
   displayValue = signal<string>('0');
   firstOperand = signal<number | null>(null);
   operator = signal<string | null>(null);
   waitingForSecondOperand = signal<boolean>(false);
+  history = signal<string[]>([]);
 
   // HostListener to capture keyboard events for better user experience
   @HostListener('window:keydown', ['$event'])
@@ -35,13 +38,14 @@ export class App {
 
   // Method to handle number button clicks
   appendNumber(num: string): void {
-    if (this.waitingForSecondOperand()) {
+    if (this.displayValue() === 'Error' || this.waitingForSecondOperand()) {
       this.displayValue.set(num);
       this.waitingForSecondOperand.set(false);
-    } else {
-      const current = this.displayValue();
-      this.displayValue.set(current === '0' ? num : current + num);
+      return;
     }
+
+    const current = this.displayValue();
+    this.displayValue.set(current === '0' ? num : current + num);
   }
 
   // Method to handle operator button clicks (+, -, *, /)
@@ -53,14 +57,25 @@ export class App {
 
   // Method to calculate the final result
   calculate(): void {
-    const secondOperand = Number(this.displayValue());
-    const firstValue = this.firstOperand();
     const op = this.operator();
+    if (!op || this.firstOperand() === null) return; // Guard: Don't calculate if no operator exists
 
-    if (op === '+') this.displayValue.set((firstValue! + secondOperand).toString());
-    if (op === '-') this.displayValue.set((firstValue! - secondOperand).toString());
-    if (op === '*') this.displayValue.set((firstValue! * secondOperand).toString());
-    if (op === '/') this.displayValue.set((firstValue! / secondOperand).toString());
+    const firstValue = this.firstOperand();
+    const secondOperand = Number(this.displayValue());
+    let result: string = '';
+
+    if (op === '+') result = (firstValue! + secondOperand).toString();
+    if (op === '-') result = (firstValue! - secondOperand).toString();
+    if (op === '*') result = (firstValue! * secondOperand).toString();
+    if (op === '/') {
+      result = secondOperand === 0 ? 'Error' : (firstValue! / secondOperand).toString();
+    }
+
+    this.displayValue.set(result);
+
+    // Record the calculation in history
+    const newEntry = `${firstValue} ${op} ${secondOperand} = ${result}`;
+    this.history.update((oldHistory) => [newEntry, ...oldHistory]);
 
     this.operator.set(null);
     this.waitingForSecondOperand.set(false);
